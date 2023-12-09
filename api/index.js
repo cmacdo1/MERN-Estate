@@ -27,6 +27,7 @@ app.use('/api/auth', authRoutes);
 
 /* MIDDLEWARE */
 app.use((err, req, res, next) => {
+    console.log("Hello from the Middleware 👋");
     const statusCode = err.statusCode || 500;
     const message = err.message || 'Internal Server Error';
     return res.status(statusCode).json({
