@@ -1,17 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     getDownloadURL,
     getStorage,
     ref,
     uploadBytesResumable,
-} from 'firebase/storage'
+} from 'firebase/storage';
 import { app } from '../firebase';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export default function CreateListing() {
     const { currentUser } = useSelector((state) => state.user);
     const navigate = useNavigate();
+    const params = useParams();
     const [files, setFiles] = useState([]);
     const [formData, setFormData] = useState({
         imageUrls: [],
@@ -22,7 +23,7 @@ export default function CreateListing() {
         bedrooms: 1,
         bathrooms: 1,
         regularPrice: 50,
-        discountPrice: 0,
+        dispatchEvent: 0,
         offer: false,
         parking: false,
         furnished: false,
@@ -31,12 +32,25 @@ export default function CreateListing() {
     const [uploading, setUploading] = useState(false);
     const [error, setError] = useState(false);
     const [loading, setLoading] = useState(false);
-    console.log(formData);
 
-    /* IMAGE UPLOAD */
+    /* FETCH LISTING */
+    useEffect(() => {
+        const fetchListing = async () => {
+            const listingId = params.listingId;
+            const res = await fetch(`/api/listing/get/${listingId}`);
+            const data = await res.json();
+            if (data.success === false) {
+                console.log(data.message);
+                return;
+            }
+            setFormData(data);
+        };
+        fetchListing();
+    }, []);
+
+    /* HANDLE FILE UPLOAD */
     const handleImageSubmit = () => {
-        if (files.length > 0 && files.length + formData.imageUrls.length < 7) 
-        {
+        if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
             setUploading(true);
             setImageUploadError(false);
             const promises = [];
@@ -44,7 +58,6 @@ export default function CreateListing() {
             for (let i = 0; i < files.length; i++) {
                 promises.push(storeImage(files[i]));
             }
-
             Promise.all(promises)
                 .then((urls) => {
                     setFormData({
@@ -55,9 +68,9 @@ export default function CreateListing() {
                     setUploading(false);
                 })
                 .catch((err) => {
-                    setImageUploadError('Image upload failed (2mb max per image)');
+                    setImageUploadError('Image Upload Failed (2MB max per image)');
                     setUploading(false);
-                    console.log(err);
+                    console.log(err.message);
                 });
         } else {
             setImageUploadError('You can only upload 6 images per listing');
@@ -65,7 +78,7 @@ export default function CreateListing() {
         }
     };
 
-    /* IMAGE STORAGE */
+    /* STORE IMAGE */
     const storeImage = async (file) => {
         return new Promise((resolve, reject) => {
             const storage = getStorage(app);
@@ -92,7 +105,7 @@ export default function CreateListing() {
         });
     };
 
-    /* DELETE IMAGE */
+    /* REMOVE IMAGE */
     const handleRemoveImage = (index) => {
         setFormData({
             ...formData,
@@ -100,52 +113,52 @@ export default function CreateListing() {
         });
     };
 
-    /* FORM CHANGE */
+    /* HANDLE FORM CHANGES */
     const handleChange = (e) => {
         if (e.target.id === 'sale' || e.target.id === 'rent') {
-            setFormData({
-                ...formData,
-                type: e.target.id,
+            setFormData({ 
+                ...formData, 
+                type: e.target.id 
             });
         }
 
         if (
             e.target.id === 'parking' ||
             e.target.id === 'furnished' ||
-            e.target.id === 'offer'
+            e.target.id === 'offer'   
         ) {
-            setFormData({
-                ...formData,
-                [e.target.id]: e.target.checked,
+            setFormData({ 
+                ...formData, 
+                [e.target.id]: e.target.checked, 
             });
         }
-        
+
         if (
             e.target.type === 'number' ||
             e.target.type === 'text' ||
             e.target.type === 'textarea'
         ) {
-            setFormData({
-                ...formData,
-                [e.target.id]: e.target.value,
+            setFormData({ 
+                ...formData, 
+                [e.target.id]: e.target.value 
             });
         }
     };
 
-    /*  HANDLE FORM SUBMIT */
+    /* HANDLE FORM SUBMIT */
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             if (formData.imageUrls.length < 1) {
-                return setError('You must upload at least 1 image');
+                return setError('Please upload at least 1 image');
             }
             if (+formData.regularPrice < +formData.discountPrice) {
-                return setError('Discount price cannot be higher than regular price');
+                return setError('Discount price cannot be greater than regular price');
             }
             setLoading(true);
             setError(false);
             
-            const res = await fetch('/api/listing/create', {
+            const res = await fetch(`/api/listing/update/${params.listingId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -155,13 +168,12 @@ export default function CreateListing() {
                     userRef: currentUser._id,
                 }),
             });
-            
-            const data = await res.json();
-            setLoading(false);
-            if (data.success === false) {
-                setError(data.message);
-            }
-            navigate(`/listing/${data._id}`);
+                const data = await res.json();
+                setLoading(false);
+                if (data.success === false) {
+                    setError(data.message);
+                }
+                navigate(`/listing/${data._id}`);
         } catch (error) {
             setError(error.message);
             setLoading(false);
@@ -171,14 +183,14 @@ export default function CreateListing() {
     return (
         <main className='p-3 max-w-4xl mx-auto'>
             <h1 className='text-3xl font-semibold text-center my-7'>
-                Create a Listing
+                Update a Listing
             </h1>
             <form 
-                className='flex flex-col sm:flex-row gap-4'
+                className='flex flex-col gap-4 sm:flex-row'
                 onSubmit={handleSubmit}
             >
                 <div className='flex flex-col gap-4 flex-1'>
-            
+                    
                     {/* FORM INPUTS */}
                     <input
                         type='text'
@@ -379,16 +391,16 @@ export default function CreateListing() {
                             </div>
                         ))}
 
-                    {/* CREATE LISTING */}
+                    {/* UPDATE LISTING */}
                     <button
                         disabled={loading || uploading} 
                         className='p-3 bg-slate-700 text-white rounded-lg uppercase hover:opacity-95 disabled:opacity-80'
                     >
-                        {loading ? 'Creating...' : 'Create Listing'}
+                        {loading ? 'Updating...' : 'Update Listing'}
                     </button>
                     {error && <p className='text-red-700 text-sm'>{error}</p>}
                 </div>
             </form>
         </main>
-    );
+    )
 }
