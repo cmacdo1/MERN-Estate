@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore from 'swiper';
+import { useSelector } from 'react-redux';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css/bundle';
 import {
@@ -13,8 +14,7 @@ import {
     FaParking,
     FaShare,
 } from 'react-icons/fa';
-
-// https://sabe.io/blog/javascript-format-numbers-commas#:~:text=The%20best%20way%20to%20format,format%20the%20number%20with%20commas.
+import Contact from '../components/Contact';
 
 export default function Listing() {
     SwiperCore.use([Navigation]);
@@ -22,8 +22,11 @@ export default function Listing() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [copied, setCopied] = useState(false);
+    const [contact, setContact] = useState(false);
     const params = useParams();
+    const {currentUser} = useSelector((state) => state.user);
 
+    /* FETCH LISTING */
     useEffect(() => {
         const fetchListing = async () => {
             try {
@@ -55,6 +58,7 @@ export default function Listing() {
             )}
             {listing && !loading && !error && (
                 <div>
+                    {/* IMAGE SLIDER */}
                     <Swiper navigation>
                         {listing.imageUrls.map((url) => (
                             <SwiperSlide key={url}>
@@ -69,6 +73,8 @@ export default function Listing() {
                             </SwiperSlide>
                         ))}
                     </Swiper>
+
+                    {/* SHARE BUTTON */}
                     <div className='fixed top-[13%] right-[3%] z-10 border rounded-full w-12 h-12 flex justify-center items-center bg-slate-100 cursor-pointer'>
                         <FaShare 
                             className='text-slate-500'
@@ -86,6 +92,8 @@ export default function Listing() {
                             Link copied!
                         </p>
                     )}
+
+                    {/* LISTING INFO */}
                     <div className='flex flex-col max-w-4xl mx-auto p-3 my-7 gap-4'>
                         <p className='text-2xl font-semibold'>
                             {listing.name} - ${' '}
@@ -98,13 +106,13 @@ export default function Listing() {
                             <FaMapMarkerAlt className='text-green-700'/>
                             {listing.address}
                         </p>
-                        <div className='flex-gap-4'>
+                        <div className='flex gap-4'>
                             <p className='bg-red-900 w-full max-w-[200px] text-white text-center p-1 rounded-md'>
                                 {listing.type === 'rent' ? 'For Rent' : 'For Sale'}
                             </p>
                             {listing.offer && (
                                 <p className='bg-green-900 w-full max-w-[200px] text-white text-center p-1 rounded-md'>
-                                    ${+listing.regularPrice - +listing.discountPrice}
+                                    ${+listing.regularPrice - +listing.discountPrice} Discount
                                 </p>
                             )}
                         </div>
@@ -136,6 +144,17 @@ export default function Listing() {
                                 {listing.furnished ? 'Furnished' : 'Unfurnished'}
                             </li>                            
                         </ul>
+
+                        {/* CONTACT LANDLORD */}
+                        {currentUser && listing.userRef !== currentUser._id && !contact && (
+                            <button
+                                onClick={() => setContact(true)}
+                                className='bg-slate-700 text-white p-3 uppercase rounded-lg hover:opacity-95'
+                            >
+                                Contact Landlord
+                            </button>
+                        )}
+                        {contact && <Contact listing={listing}/>}
                     </div>
                 </div>
             )}
