@@ -4,15 +4,15 @@ import React from 'react'
 export default function About() {
   return (
     <div className='py-20 px-4 max-w-6xl mx-auto'>
-      <h1 className='text-3xl font-bold mb-4 text-slate-800'>About MacDonald Estate</h1>
+      <h1 className='text-3xl font-bold mb-4 text-slate-800'>About GrandVista Estates</h1>
       <p className='mb-4 text-slate-700'>
-        MacDonald Estate is a leading real estate agency that specializes in helping clients buy, sell, and rent properties in the most desirable neighborhoods. Our team of experienced agents is dedicated to providing exceptional service and making the buying and selling process as smooth as possible.
+        Welcome to GrandVista Estates, a distinguished real estate agency renowned for its commitment to excellence in buying, selling, and renting properties within the most coveted neighborhoods. Our team of seasoned agents is passionate about delivering unparalleled service, ensuring a seamless and gratifying experience throughout the entire real estate journey.
       </p>
       <p className='mb-4 text-slate-700'>
-        Our mission is to help our clients achieve their real estate goals by providing expert advice, personalized service, and a deep understanding of the local market. Whether you are looking to buy, sell, or rent a property, we are here to help you every step of the way.
+        At GrandVista Estates, our mission is clear: empower clients to reach their real estate aspirations through expert advice, tailored service, and an in-depth knowledge of the local market. Whether you are in pursuit of your dream home, selling a property, or seeking a rental, we are your dedicated partners at every step.
       </p>
       <p className='mb-4 text-slate-700'>
-        Our team of agents has a wealth of experience and knowledge in the real estate industry, and we are committed to providing the highest level of service to our clients. We believe that buying or selling a property should be an exciting and rewarding experience, and we are dedicated to making that a reality for each and every one of our clients.
+        Backed by a team with a wealth of experience and a profound understanding of the real estate industry, we uphold a commitment to providing the utmost level of service to our valued clients. We firmly believe that the process of buying or selling a property should be both exhilarating and rewarding, and it is our unwavering dedication to turn that belief into a reality for each individual we serve.
       </p>
     </div>
   )

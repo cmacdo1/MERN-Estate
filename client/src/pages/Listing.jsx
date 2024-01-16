@@ -66,7 +66,7 @@ export default function Listing() {
                                     className='h-[550px]'
                                     style={{
                                         background: `url(${url}) center no-repeat`,
-                                        backgroundSize: 'cover',
+                                        backgroundSize: 'contain',
                                     }}
                                 >
                                 </div>
@@ -75,7 +75,7 @@ export default function Listing() {
                     </Swiper>
 
                     {/* SHARE BUTTON */}
-                    <div className='fixed top-[13%] right-[3%] z-10 border rounded-full w-12 h-12 flex justify-center items-center bg-slate-100 cursor-pointer'>
+                    <div className='fixed top-[10%] right-[30%] z-10 border rounded-full w-12 h-12 flex justify-center items-center bg-slate-100 cursor-pointer'>
                         <FaShare 
                             className='text-slate-500'
                             onClick={() => {

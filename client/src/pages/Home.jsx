@@ -53,14 +53,14 @@ export default function Home() {
       {/* TOP */}
       <div className='flex flex-col gap-6 p-28 px-3 max-w-6xl mx-auto'>
         <h1 className='text-slate-700 font-bold text-3xl lg:text-6xl'>
-          Find your next <span className='text-slate-500'>perfect</span>
+          Unmatched <span className='text-slate-500'>Splendor</span>
           <br />
-          place with ease
+          Unrivaled <span className='text-slate-500'>Comfort</span>
         </h1>
         <div className='text-gray-400 text-xs sm:text-sm'>
-          MacDonald Estate is the best place to find your next perfect place to live.
+          Embark on a journey to your ideal residence with GrandVista Estates, where unparalleled living experiences await.
           <br />
-          We have a wide range of properties for you to choose from.
+          Explore an extensive collection of meticulously curated properties, ensuring you discover not just a house but the perfect haven for your lifestyle.
         </div>
         <Link
           to={'/search'}
@@ -81,7 +81,7 @@ export default function Home() {
                   background: `url(${listing.imageUrls[0]}) center no-repeat`,
                   backgroundSize: 'cover',
                 }}
-                className='h-[500px]'
+                className='h-[750px]'
                 key={listing._id}
               >
               </div>
